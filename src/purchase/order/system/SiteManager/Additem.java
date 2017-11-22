@@ -9,11 +9,17 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.ResultSet;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import net.proteanit.sql.DbUtils;
+import purchase.order.system.Public.FrameDrag;
 
 /**
  *
@@ -24,19 +30,50 @@ public class Additem extends javax.swing.JFrame {
     /**
      * Creates new form AdditemFrame
      */
-    
-    DefaultTableModel table;
+    private HashMap<String, Double> items;
+    private PurchaseRequsition pr;
+    private PurchaseRequsitionModel prm;
+    private DefaultTableModel tableRequestedItems;
+    private FrameDrag frameDragListener; 
+   
+    private ResultSet rs = null;
+
     public Additem() {
         initComponents();
-        table=(DefaultTableModel)jTable2.getModel();
-        FrameDragListener frameDragListener = new FrameDragListener(this);
-        this.addMouseListener(frameDragListener);
-        this.addMouseMotionListener(frameDragListener);
+        prm = new PurchaseRequsitionModel();
+        itemTableLoad();
+        items = new HashMap<>();
+        tableRequestedItems = (DefaultTableModel) tblRequestedItems.getModel();
+
+        tblRequestedItems.setSelectionMode(NORMAL);
+        frameDragListener = new FrameDrag(this);
+        frameDragListener.mouseDrag();
+
+        btnAddList.setBackground(Color.red);
+        tableItems.getColumnModel().getColumn(0).setPreferredWidth(20);
+        tableItems.getColumnModel().getColumn(1).setPreferredWidth(100);
+        tableItems.getColumnModel().getColumn(2).setPreferredWidth(185);
+        tableItems.getColumnModel().getColumn(3).setPreferredWidth(25);
+    }
+
+    public Additem(PurchaseRequsition pr) {
+        initComponents();
+        prm = new PurchaseRequsitionModel();
+        itemTableLoad();
+        this.pr = pr;
+        items = new HashMap<>();
+        tableRequestedItems = (DefaultTableModel) tblRequestedItems.getModel();
+
+        tblRequestedItems.setSelectionMode(NORMAL);
+        frameDragListener = new FrameDrag(this);
+        frameDragListener.mouseDrag();
         
-        jButton1.setBackground(Color.red);
-        jTable1.getColumnModel().getColumn(0).setPreferredWidth(25);
-        jTable1.getColumnModel().getColumn(1).setPreferredWidth(175);
-        jTable1.getColumnModel().getColumn(2).setPreferredWidth(25);
+
+        btnAddList.setBackground(Color.red);
+        tableItems.getColumnModel().getColumn(0).setPreferredWidth(20);
+        tableItems.getColumnModel().getColumn(1).setPreferredWidth(100);
+        tableItems.getColumnModel().getColumn(2).setPreferredWidth(185);
+        tableItems.getColumnModel().getColumn(3).setPreferredWidth(25);
     }
 
     /**
@@ -57,12 +94,13 @@ public class Additem extends javax.swing.JFrame {
         jTextField1 = new javax.swing.JTextField();
         jTextField2 = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
+        tableItems = new javax.swing.JTable();
+        btnAddList = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
-        jButton2 = new javax.swing.JButton();
+        btnRemoveList = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        tblRequestedItems = new javax.swing.JTable();
+        btnAddItems = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -94,7 +132,7 @@ public class Additem extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(70, 70, 70)
                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 523, Short.MAX_VALUE)
                 .addComponent(jLabel9)
                 .addContainerGap())
         );
@@ -111,6 +149,7 @@ public class Additem extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel2.setPreferredSize(new java.awt.Dimension(550, 341));
 
         jTextField1.setText("jTextField1");
 
@@ -118,42 +157,38 @@ public class Additem extends javax.swing.JFrame {
 
         jScrollPane2.setBorder(null);
         jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane2.setPreferredSize(new java.awt.Dimension(500, 400));
 
-        jTable1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        jTable1.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tableItems.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        tableItems.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
+        tableItems.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"1", "dff", "12"},
-                {"2", "erwqr", "34"},
-                {"3", "tyu", "56"},
-                {"4", "hjgkj", "67"},
-                {"5", "cxsac", null},
-                {null, null, null},
-                {null, null, null}
+
             },
             new String [] {
-                "ITEM ID", "DESCRIPTION", "UNIT PRICE"
+                "ITEM ID", "CATEGORY", "DESCRIPTION", "UNIT PRICE"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
         });
-        jTable1.setGridColor(new java.awt.Color(0, 0, 0));
-        jTable1.setIntercellSpacing(new java.awt.Dimension(0, 0));
-        jTable1.setRowHeight(25);
-        jTable1.setSelectionBackground(new java.awt.Color(95, 53, 174));
-        jScrollPane2.setViewportView(jTable1);
+        tableItems.setGridColor(new java.awt.Color(0, 0, 0));
+        tableItems.setIntercellSpacing(new java.awt.Dimension(0, 0));
+        tableItems.setPreferredSize(new java.awt.Dimension(550, 175));
+        tableItems.setRowHeight(25);
+        tableItems.setSelectionBackground(new java.awt.Color(95, 53, 174));
+        jScrollPane2.setViewportView(tableItems);
 
-        jButton1.setBackground(new java.awt.Color(95, 53, 174));
-        jButton1.setText("Add To List");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnAddList.setBackground(new java.awt.Color(95, 53, 174));
+        btnAddList.setText("Add To List");
+        btnAddList.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnAddListActionPerformed(evt);
             }
         });
 
@@ -164,17 +199,16 @@ public class Additem extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(12, 12, 12)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(31, 31, 31)
-                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 397, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(22, 22, 22)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(31, 31, 31)
+                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(148, 148, 148)
-                        .addComponent(jButton1)))
+                        .addComponent(btnAddList))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -187,22 +221,27 @@ public class Additem extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
+                .addComponent(btnAddList)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel4.setBackground(new java.awt.Color(255, 255, 255));
         jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        jButton2.setBackground(new java.awt.Color(95, 53, 174));
-        jButton2.setText("Remove From List");
+        btnRemoveList.setBackground(new java.awt.Color(95, 53, 174));
+        btnRemoveList.setText("Remove From List");
+        btnRemoveList.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRemoveListActionPerformed(evt);
+            }
+        });
 
         jScrollPane3.setBorder(null);
         jScrollPane3.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-        jTable2.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        jTable2.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        tblRequestedItems.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        tblRequestedItems.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
+        tblRequestedItems.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -218,37 +257,33 @@ public class Additem extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
-        jTable2.setGridColor(new java.awt.Color(0, 0, 0));
-        jTable2.setIntercellSpacing(new java.awt.Dimension(0, 0));
-        jTable2.setRowHeight(25);
-        jTable2.setSelectionBackground(new java.awt.Color(95, 53, 174));
-        jScrollPane3.setViewportView(jTable2);
+        tblRequestedItems.setGridColor(new java.awt.Color(0, 0, 0));
+        tblRequestedItems.setIntercellSpacing(new java.awt.Dimension(0, 0));
+        tblRequestedItems.setRowHeight(25);
+        tblRequestedItems.setSelectionBackground(new java.awt.Color(95, 53, 174));
+        jScrollPane3.setViewportView(tblRequestedItems);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addComponent(jButton2)
-                .addContainerGap(35, Short.MAX_VALUE))
-            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel4Layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(btnRemoveList))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton2)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnRemoveList)
                 .addContainerGap())
-            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel4Layout.createSequentialGroup()
-                    .addGap(44, 44, 44)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(45, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
@@ -257,10 +292,10 @@ public class Additem extends javax.swing.JFrame {
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 522, Short.MAX_VALUE)
+                .addGap(20, 20, 20)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -272,22 +307,36 @@ public class Additem extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        btnAddItems.setBackground(new java.awt.Color(248, 5, 5));
+        btnAddItems.setText("Add Items");
+        btnAddItems.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddItemsActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10))
-            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnAddItems)
+                .addGap(48, 48, 48))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
+                .addGap(18, 18, 18)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnAddItems)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -295,13 +344,13 @@ public class Additem extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -313,51 +362,130 @@ public class Additem extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jLabel9MousePressed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnAddListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddListActionPerformed
         // TODO add your handling code here:
-       
-        getSelectedRows();
-    }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void getSelectedRows(){
-        
-         if (jTable1.getRowCount() > 0) {
-        if (jTable1.getSelectedRowCount() > 0) {
-            int selectedRow[] = jTable1.getSelectedRows();
-            for (int i : selectedRow) {
-                String id = jTable1.getValueAt(i, 0).toString();
-                table.addRow(new Object[]{id, " "});
-               
+        getSelectedRows();
+    }//GEN-LAST:event_btnAddListActionPerformed
+
+    private void btnRemoveListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveListActionPerformed
+        // TODO add your handling code here:
+        removeSelectedRows();
+
+    }//GEN-LAST:event_btnRemoveListActionPerformed
+
+    private void btnAddItemsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddItemsActionPerformed
+        // TODO add your handling code here:
+        //  System.out.println(jTable2.getValueAt(i, 1).toString().length());
+        if (addItems()) {
+                if(!this.pr.checkItemExist(items)){
+                    this.pr.setItems(items);
+                    this.dispose();
+                }
+        }
+    }//GEN-LAST:event_btnAddItemsActionPerformed
+
+    private void itemTableLoad() {
+
+        rs=prm.getItemDetails();
+      //  tableItemDetails = (DefaultTableModel) DbUtils.resultSetToTableModel(rs);
+
+        tableItems.setModel(DbUtils.resultSetToTableModel(rs));
+
+    }
+
+    private boolean addItems() {
+
+        double quantity;
+        String id;
+        for (int i = 0; i < tblRequestedItems.getRowCount(); i++) {
+
+            id = tblRequestedItems.getValueAt(i, 0).toString();
+            if (tblRequestedItems.getValueAt(i, 1).toString().trim().length() > 0) {
+                try {
+                    quantity = Double.parseDouble(tblRequestedItems.getValueAt(i, 1).toString());
+                    items.put(id, quantity);
+
+                } catch (NumberFormatException ex) {
+
+                    JOptionPane.showMessageDialog(null, " Please Insert a valid quantity for Item" + id);
+                    items.clear();
+                    return false;
+                } catch (NullPointerException ex) {
+
+                    JOptionPane.showMessageDialog(null, " Please Insert a quantity for Item" + id);
+                    items.clear();
+                    return false;
+                }
+            } else {
+                //  System.out.println(jTable2.getValueAt(i, 1).toString().trim().length());
+                JOptionPane.showMessageDialog(null, " Please Insert a quantity for Item" + id);
+                items.clear();
+                return false;
             }
         }
-        
-             
+
+        return true;
     }
+
+    private void getSelectedRows() {
+
+        if (tableItems.getRowCount() > 0) {
+            if (tableItems.getSelectedRowCount() > 0) {
+                int selectedRow[] = tableItems.getSelectedRows();
+                for (int i : selectedRow) {
+                    String id = tableItems.getValueAt(i, 0).toString();
+                    if (addtoHashMap(id)) {
+                        tableRequestedItems.addRow(new Object[]{id, " "});
+                    }
+                }
+            }
+
+        }
     }
+
+    // String test1= JOptionPane.showInputDialog("Please input mark for test 1: ");
+    public boolean isNumber(String str) {
+        double quantity;
+        try {
+            Double.parseDouble(str);
+            return true;
+        } catch (NumberFormatException ex) {
+
+            return false;
+        }
+
+    }
+
+    private void removeSelectedRows() {
+
+        if (tblRequestedItems.getRowCount() > 0) {
+
+            int response = JOptionPane.showConfirmDialog(null, "Do you really want to Remove the selected Items?");
+            if (response == 0) {
+                int selectedRow = tblRequestedItems.getSelectedRow();
+
+                items.remove(tblRequestedItems.getValueAt(selectedRow, 0).toString());
+                tableRequestedItems.removeRow(selectedRow);
+                
+            }
+
+        }
+    }
+
+    private boolean addtoHashMap(String id) {
+
+        if (items.containsKey(id)) {
+            JOptionPane.showMessageDialog(null, id + " " + " Is already Added");
+            return false;
+        } else {
+            items.put(id,Double.NaN);
+            return true;
+        }
+    }
+
     
-    
-     public static class FrameDragListener extends MouseAdapter {
 
-        private final JFrame frame;
-        private Point mouseDownCompCoords = null;
-
-        public FrameDragListener(JFrame frame) {
-            this.frame = frame;
-        }
-
-        public void mouseReleased(MouseEvent e) {
-            mouseDownCompCoords = null;
-        }
-
-        public void mousePressed(MouseEvent e) {
-            mouseDownCompCoords = e.getPoint();
-        }
-
-        public void mouseDragged(MouseEvent e) {
-            Point currCoords = e.getLocationOnScreen();
-            frame.setLocation(currCoords.x - mouseDownCompCoords.x, currCoords.y - mouseDownCompCoords.y);
-        }
-    }
     /**
      * @param args the command line arguments
      */
@@ -395,8 +523,9 @@ public class Additem extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton btnAddItems;
+    private javax.swing.JButton btnAddList;
+    private javax.swing.JButton btnRemoveList;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
@@ -406,9 +535,9 @@ public class Additem extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
+    private javax.swing.JTable tableItems;
+    private javax.swing.JTable tblRequestedItems;
     // End of variables declaration//GEN-END:variables
 }
