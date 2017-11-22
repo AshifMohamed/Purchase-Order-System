@@ -39,7 +39,6 @@ public class SiteManagerHome extends javax.swing.JFrame {
     private FrameDrag frameDragListener; 
     PurchaseRequsition pr;
     ViewPurchaseRequisition vr;
-    Payment py;
 
     public SiteManagerHome() {
         initComponents();
@@ -61,19 +60,6 @@ public class SiteManagerHome extends javax.swing.JFrame {
 
          frameDragListener = new FrameDrag(this);
          frameDragListener.mouseDrag();
-        //payment window
-        py = new Payment();
-        py.setResizable(true);
-        py.setPreferredSize(new Dimension(jPanel1.getHeight(), jPanel1.getWidth()));
-        py.setMinimumSize(new Dimension(jPanel1.getHeight(), jPanel1.getWidth()));
-        System.out.println(jPanel1.getHeight() + "  " + jPanel1.getWidth());
-        BasicInternalFrameUI biPy = (BasicInternalFrameUI) py.getUI();
-        biPy.setNorthPane(null);
-        biPy.setWestPane(null);
-        biPy.setSouthPane(null);
-        biPy.setEastPane(null);
-
-        jDesktopPane1.add(py);
 
 
 //        JTableHeader th = jTable1.getTableHeader();
@@ -463,7 +449,6 @@ public class SiteManagerHome extends javax.swing.JFrame {
         setColor(jPanel5);
         resetColor(jPanel3);
         resetColor(jPanel4);
-        py.setVisible(true);
         pr.setVisible(false);
     }//GEN-LAST:event_jPanel5MousePressed
 
