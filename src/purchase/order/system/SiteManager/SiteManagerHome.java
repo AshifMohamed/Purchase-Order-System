@@ -14,6 +14,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
@@ -24,6 +25,7 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+import purchase.order.system.Public.FrameDrag;
 
 /**
  *
@@ -34,26 +36,31 @@ public class SiteManagerHome extends javax.swing.JFrame {
     /**
      * Creates new form Home
      */
+    private FrameDrag frameDragListener; 
     PurchaseRequsition pr;
+    ViewPurchaseRequisition vr;
     Payment py;
 
     public SiteManagerHome() {
         initComponents();
 
         pr = new PurchaseRequsition();
-        pr.setResizable(true);
-        pr.setPreferredSize(new Dimension(jPanel1.getHeight(), jPanel1.getWidth()));
-        pr.setMinimumSize(new Dimension(jPanel1.getHeight(), jPanel1.getWidth()));
-        System.out.println(jPanel1.getHeight() + "  " + jPanel1.getWidth());
-        BasicInternalFrameUI bi = (BasicInternalFrameUI) pr.getUI();
-        bi.setNorthPane(null);
-        bi.setWestPane(null);
-        bi.setSouthPane(null);
-        bi.setEastPane(null);
+        vr = new ViewPurchaseRequisition();
+        pr.setVisible(true);
+//         pr.setResizable(true);
+//         pr.setPreferredSize(new Dimension(jPanel1.getHeight(), jPanel1.getWidth()));
+//         pr.setMinimumSize(new Dimension(jPanel1.getHeight(), jPanel1.getWidth()));
+//         System.out.println(jPanel1.getHeight() +"  "+ jPanel1.getWidth());
+     //   BasicInternalFrameUI bi = (BasicInternalFrameUI) pr.getUI();
+        removeFrameBorder((BasicInternalFrameUI) pr.getUI());
+        removeFrameBorder((BasicInternalFrameUI) vr.getUI());
 
         // pan=new NewJPanel();
         jDesktopPane1.add(pr);
+        jDesktopPane1.add(vr);
 
+         frameDragListener = new FrameDrag(this);
+         frameDragListener.mouseDrag();
         //payment window
         py = new Payment();
         py.setResizable(true);
@@ -66,12 +73,8 @@ public class SiteManagerHome extends javax.swing.JFrame {
         biPy.setSouthPane(null);
         biPy.setEastPane(null);
 
-        // pan=new NewJPanel();
         jDesktopPane1.add(py);
 
-        FrameDragListener frameDragListener = new FrameDragListener(this);
-        this.addMouseListener(frameDragListener);
-        this.addMouseMotionListener(frameDragListener);
 
 //        JTableHeader th = jTable1.getTableHeader();
 //        TableColumnModel tcm = th.getColumnModel();
@@ -111,6 +114,14 @@ public class SiteManagerHome extends javax.swing.JFrame {
         label.setBackground(new Color(47, 26, 105));
     }
 
+    private void removeFrameBorder(BasicInternalFrameUI frame) {
+
+        frame.setNorthPane(null);
+        frame.setWestPane(null);
+        frame.setSouthPane(null);
+        frame.setEastPane(null);
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -129,6 +140,12 @@ public class SiteManagerHome extends javax.swing.JFrame {
         jPanel4 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
+        jPanel6 = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jPanel7 = new javax.swing.JPanel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel15 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
@@ -155,9 +172,9 @@ public class SiteManagerHome extends javax.swing.JFrame {
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/correct.JPG"))); // NOI18N
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(204, 204, 204));
-        jLabel2.setText("Employee Benefits");
+        jLabel2.setText("PURCHASE RETURN");
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -182,7 +199,7 @@ public class SiteManagerHome extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        sidePanel.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 180, 210, -1));
+        sidePanel.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 280, 210, -1));
 
         jSeparator1.setPreferredSize(new java.awt.Dimension(50, 5));
         sidePanel.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 70, 160, 10));
@@ -204,7 +221,7 @@ public class SiteManagerHome extends javax.swing.JFrame {
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(204, 204, 204));
-        jLabel4.setText("Employee Benefits");
+        jLabel4.setText("CREATE REQUISITION");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -214,8 +231,8 @@ public class SiteManagerHome extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(33, Short.MAX_VALUE))
+                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -243,7 +260,7 @@ public class SiteManagerHome extends javax.swing.JFrame {
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(204, 204, 204));
-        jLabel6.setText("Employee Benefits");
+        jLabel6.setText("VIEW REQUISITION");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -253,8 +270,8 @@ public class SiteManagerHome extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addComponent(jLabel6)
+                .addContainerGap(33, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -269,6 +286,84 @@ public class SiteManagerHome extends javax.swing.JFrame {
         );
 
         sidePanel.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 130, 210, -1));
+
+        jPanel6.setBackground(new java.awt.Color(47, 26, 105));
+        jPanel6.setToolTipText("");
+        jPanel6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jPanel6MousePressed(evt);
+            }
+        });
+
+        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/correct.JPG"))); // NOI18N
+
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(204, 204, 204));
+        jLabel8.setText("DRAFT");
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(29, Short.MAX_VALUE))
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addComponent(jLabel8)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        sidePanel.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 180, 210, -1));
+
+        jPanel7.setBackground(new java.awt.Color(47, 26, 105));
+        jPanel7.setToolTipText("");
+        jPanel7.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jPanel7MousePressed(evt);
+            }
+        });
+
+        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/correct.JPG"))); // NOI18N
+
+        jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(204, 204, 204));
+        jLabel11.setText("GRN");
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(29, Short.MAX_VALUE))
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addComponent(jLabel11)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        sidePanel.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 230, 210, -1));
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -382,6 +477,8 @@ public class SiteManagerHome extends javax.swing.JFrame {
         setColor(jPanel3);
         resetColor(jPanel4);
         resetColor(jPanel5);
+        pr.setVisible(true);
+        vr.setVisible(true);
     }//GEN-LAST:event_jPanel3MousePressed
 
     private void jPanel4MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel4MousePressed
@@ -389,32 +486,18 @@ public class SiteManagerHome extends javax.swing.JFrame {
         setColor(jPanel4);
         resetColor(jPanel3);
         resetColor(jPanel5);
-        pr.setVisible(true);
+        vr.setVisible(true);
+        pr.setVisible(false);
 
     }//GEN-LAST:event_jPanel4MousePressed
 
-    public static class FrameDragListener extends MouseAdapter {
+    private void jPanel6MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel6MousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jPanel6MousePressed
 
-        private final JFrame frame;
-        private Point mouseDownCompCoords = null;
-
-        public FrameDragListener(JFrame frame) {
-            this.frame = frame;
-        }
-
-        public void mouseReleased(MouseEvent e) {
-            mouseDownCompCoords = null;
-        }
-
-        public void mousePressed(MouseEvent e) {
-            mouseDownCompCoords = e.getPoint();
-        }
-
-        public void mouseDragged(MouseEvent e) {
-            Point currCoords = e.getLocationOnScreen();
-            frame.setLocation(currCoords.x - mouseDownCompCoords.x, currCoords.y - mouseDownCompCoords.y);
-        }
-    }
+    private void jPanel7MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel7MousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jPanel7MousePressed
 
     /**
      * @param args the command line arguments
@@ -460,6 +543,8 @@ public class SiteManagerHome extends javax.swing.JFrame {
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
@@ -467,12 +552,16 @@ public class SiteManagerHome extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JPanel sidePanel;
     // End of variables declaration//GEN-END:variables
