@@ -39,14 +39,22 @@ public class SiteManagerHome extends javax.swing.JFrame {
     private FrameDrag frameDragListener; 
     PurchaseRequsition pr;
     ViewPurchaseRequisition vr;
+
+    GoodsReceiveNote grn;
+
     Payment py;
+
 
     public SiteManagerHome() {
         initComponents();
 
         pr = new PurchaseRequsition();
         vr = new ViewPurchaseRequisition();
+
+        grn=new  GoodsReceiveNote();
+
         py = new Payment();
+
         pr.setVisible(true);
 //         pr.setResizable(true);
 //         pr.setPreferredSize(new Dimension(jPanel1.getHeight(), jPanel1.getWidth()));
@@ -55,12 +63,20 @@ public class SiteManagerHome extends javax.swing.JFrame {
      //   BasicInternalFrameUI bi = (BasicInternalFrameUI) pr.getUI();
         removeFrameBorder((BasicInternalFrameUI) pr.getUI());
         removeFrameBorder((BasicInternalFrameUI) vr.getUI());
+
+        removeFrameBorder((BasicInternalFrameUI) grn.getUI());
+        // pan=new NewJPanel();
+        jDesktopPane1.add(pr);
+        jDesktopPane1.add(vr);
+        jDesktopPane1.add(grn);
+
         removeFrameBorder((BasicInternalFrameUI) py.getUI());
 
         // pan=new NewJPanel();
         jDesktopPane1.add(pr);
         jDesktopPane1.add(vr);
         jDesktopPane1.add(py);
+
 
          frameDragListener = new FrameDrag(this);
          frameDragListener.mouseDrag();
@@ -133,7 +149,7 @@ public class SiteManagerHome extends javax.swing.JFrame {
         jPanel6 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        jPanel7 = new javax.swing.JPanel();
+        panelGRN = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         jPanel_payment = new javax.swing.JPanel();
@@ -319,11 +335,11 @@ public class SiteManagerHome extends javax.swing.JFrame {
 
         sidePanel.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 180, 210, -1));
 
-        jPanel7.setBackground(new java.awt.Color(47, 26, 105));
-        jPanel7.setToolTipText("");
-        jPanel7.addMouseListener(new java.awt.event.MouseAdapter() {
+        panelGRN.setBackground(new java.awt.Color(47, 26, 105));
+        panelGRN.setToolTipText("");
+        panelGRN.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                jPanel7MousePressed(evt);
+                panelGRNMousePressed(evt);
             }
         });
 
@@ -333,30 +349,30 @@ public class SiteManagerHome extends javax.swing.JFrame {
         jLabel11.setForeground(new java.awt.Color(204, 204, 204));
         jLabel11.setText("GRN");
 
-        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
-        jPanel7.setLayout(jPanel7Layout);
-        jPanel7Layout.setHorizontalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
+        javax.swing.GroupLayout panelGRNLayout = new javax.swing.GroupLayout(panelGRN);
+        panelGRN.setLayout(panelGRNLayout);
+        panelGRNLayout.setHorizontalGroup(
+            panelGRNLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelGRNLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel10)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(29, Short.MAX_VALUE))
         );
-        jPanel7Layout.setVerticalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
+        panelGRNLayout.setVerticalGroup(
+            panelGRNLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelGRNLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
-            .addGroup(jPanel7Layout.createSequentialGroup()
+            .addGroup(panelGRNLayout.createSequentialGroup()
                 .addGap(19, 19, 19)
                 .addComponent(jLabel11)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        sidePanel.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 230, 210, -1));
+        sidePanel.add(panelGRN, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 230, 210, -1));
 
         jPanel_payment.setBackground(new java.awt.Color(47, 26, 105));
         jPanel_payment.setToolTipText("");
@@ -555,6 +571,16 @@ public class SiteManagerHome extends javax.swing.JFrame {
         //activating the respective jInternalPanel
     }//GEN-LAST:event_jPanel6MousePressed
 
+
+    private void panelGRNMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelGRNMousePressed
+        setColor(panelGRN);
+        resetColor(jPanel3);
+        resetColor(jPanel5);
+        grn.setVisible(true);
+        vr.setVisible(false);
+        pr.setVisible(false);
+    }//GEN-LAST:event_panelGRNMousePressed
+
     private void jPanel7MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel7MousePressed
         // TODO add your handling code here:
         //button activation animation
@@ -567,6 +593,7 @@ public class SiteManagerHome extends javax.swing.JFrame {
         
         //activating the respective jInternalPanel
     }//GEN-LAST:event_jPanel7MousePressed
+
 
     private void jPanel_paymentMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel_paymentMousePressed
         // TODO add your handling code here:
@@ -648,9 +675,13 @@ public class SiteManagerHome extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
+<<<<<<< HEAD
+=======
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel_payment;
+>>>>>>> 16cfa09f5852864530bb1c52d756e42440d9edd6
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JPanel panelGRN;
     private javax.swing.JPanel sidePanel;
     // End of variables declaration//GEN-END:variables
 }

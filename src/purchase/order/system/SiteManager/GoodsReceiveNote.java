@@ -4,62 +4,64 @@
  * and open the template in the editor.
  */
 package purchase.order.system.SiteManager;
-
-import purchase.order.system.*;
 import java.awt.Color;
 import java.awt.Component;
+import java.sql.Connection;
 import java.sql.ResultSet;
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import net.proteanit.sql.DbUtils;
-import purchase.order.system.Public.ButtonRenderer;
+import purchase.order.system.Public.DBConn;
+
 
 /**
  *
  * @author User
  */
-public class ViewPurchaseRequisition extends javax.swing.JInternalFrame {
+public class GoodsReceiveNote extends javax.swing.JInternalFrame {
 
-    /**
-     * Creates new form PurchaseRequsition
-     */
-    private DefaultTableModel table;
+    
+    private DefaultTableModel defaultTableModel;
     private ResultSet rs;
-    private PurchaseRequsitionModel prm;
-    private ViewSingleRequisition vs;
-
-    public ViewPurchaseRequisition() {
+    private UpdateReceivedGoods urg;
+    public GoodsReceiveNote() {
         initComponents();
-
-        prm = new PurchaseRequsitionModel();
-        table = (DefaultTableModel) tableRequsition.getModel();
-
-        requsitionTableLoad();
-    }
-
-    public void requsitionTableLoad() {
-
-        rs = prm.getRequisitionDetails();
-
-        DefaultTableModel tableModel = (DefaultTableModel) DbUtils.resultSetToTableModel(rs);
-        tableModel.addColumn("VIEW");
-        tableModel.addColumn("DELETE");
-
-        tableRequsition.setModel(tableModel);
-        tableRequsition.getColumn("VIEW").setCellRenderer(new ButtonRenderer("VIEW"));
-        tableRequsition.getColumn("DELETE").setCellRenderer(new ButtonRenderer("DELETE"));
-        setTableHeaderColor();
+        loadAllRequesitions();
 
     }
 
+   public void loadAllRequesitions() {
+        try (Connection dbConnection = DBConn.myConn()) {
+            rs = dbConnection.createStatement().executeQuery("select * from purchaserequisition");
+            while (rs.next()) {
+                Object[] content = {rs.getString("RequisitionNo"), rs.getString("AppliedDate"), rs.getString("RequiredDate"), rs.getString("RequisitionStatus"), rs.getString("TotalAmnt")};
+                defaultTableModel = (DefaultTableModel) tableRequesitons.getModel();
+                defaultTableModel.addRow(content);
+            }
+            setTableHeaderColor();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    class headerCellRenderer extends DefaultTableCellRenderer {
+
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, 0, 3);
+            c.setBackground(new Color(47, 6, 152));
+            c.setForeground(Color.white);
+
+            return c;
+        }
+
+    }
+    
     private void setTableHeaderColor() {
 
-        JTableHeader th = tableRequsition.getTableHeader();
+        JTableHeader th = tableRequesitons.getTableHeader();
 
         TableColumnModel tcm = th.getColumnModel();
         TableColumn tc1 = tcm.getColumn(0);
@@ -74,20 +76,10 @@ public class ViewPurchaseRequisition extends javax.swing.JInternalFrame {
         tc3.setHeaderRenderer(new headerCellRenderer());
         tc4.setHeaderRenderer(new headerCellRenderer());
         tc5.setHeaderRenderer(new headerCellRenderer());
-        tc6.setHeaderRenderer(new headerCellRenderer());
+        
     }
+    
 
-    class headerCellRenderer extends DefaultTableCellRenderer {
-
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, 0, 3);
-            c.setBackground(new Color(47, 6, 152));
-            c.setForeground(Color.white);
-
-            return c;
-        }
-
-    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -104,9 +96,7 @@ public class ViewPurchaseRequisition extends javax.swing.JInternalFrame {
         jPanel5 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tableRequsition = new javax.swing.JTable();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
+        tableRequesitons = new javax.swing.JTable();
 
         setBorder(null);
         setMinimumSize(new java.awt.Dimension(0, 0));
@@ -118,16 +108,16 @@ public class ViewPurchaseRequisition extends javax.swing.JInternalFrame {
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(204, 204, 204));
-        jLabel7.setText("VIEW REQUISITIONS");
+        jLabel7.setText("VIEW GOODS RECEIVE NOTE");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(90, 90, 90)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 388, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(302, Short.MAX_VALUE))
+                .addGap(160, 160, 160))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -139,79 +129,44 @@ public class ViewPurchaseRequisition extends javax.swing.JInternalFrame {
 
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        jScrollPane1.setBorder(null);
-        jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
-        tableRequsition.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        tableRequsition.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
-        tableRequsition.setModel(new javax.swing.table.DefaultTableModel(
+        tableRequesitons.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "REQ. NO", "APPLIED DATE", "REQ. DATE", "STATUS", "VIEW", "DELETE"
+                "Requesition No", "Applied Date", "Required Date", "Requesition Status", "Total Amount"
             }
         ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class
-            };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, true, true
+                false, false, false, false, true
             };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        tableRequsition.setGridColor(new java.awt.Color(0, 0, 0));
-        tableRequsition.setIntercellSpacing(new java.awt.Dimension(0, 0));
-        tableRequsition.setRowHeight(25);
-        tableRequsition.setSelectionBackground(new java.awt.Color(95, 53, 174));
-        tableRequsition.addMouseListener(new java.awt.event.MouseAdapter() {
+        tableRequesitons.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tableRequsitionMouseClicked(evt);
+                tableRequesitonsMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(tableRequsition);
-
-        jTextField1.setText("jTextField1");
-
-        jTextField2.setText("jTextField1");
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
-            }
-        });
+        jScrollPane1.setViewportView(tableRequesitons);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(69, 69, 69)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(126, 126, 126)
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1)
+                .addContainerGap(20, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 722, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(33, 33, 33)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 368, Short.MAX_VALUE)
-                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap(81, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(28, 28, 28))
         );
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
@@ -228,7 +183,7 @@ public class ViewPurchaseRequisition extends javax.swing.JInternalFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -254,40 +209,18 @@ public class ViewPurchaseRequisition extends javax.swing.JInternalFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 553, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 560, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void tableRequsitionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableRequsitionMouseClicked
-        // TODO add your handling code here:
-        int row = tableRequsition.rowAtPoint(evt.getPoint());
-        int col = tableRequsition.columnAtPoint(evt.getPoint());
-        String status = tableRequsition.getValueAt(row, 3).toString();
-
-        if (col == 4) {
-            vs = new ViewSingleRequisition(tableRequsition.getValueAt(row, 0).toString());
-            vs.setVisible(true);
-            System.out.println("View Req");
-
-        } else if (col == 5) {
-            if ((status.equals("Approved")) || (status.equals("Declined"))) {
-                int response = JOptionPane.showConfirmDialog(null, "Do you really want to Delete the selected Requisition");
-                if (response == 0) {
-
-                    table.removeRow(row);
-                }
-            } else {
-
-                JOptionPane.showMessageDialog(null, "You cannot delete the selected Requsition , Approval pending");
-            }
-        }
-    }//GEN-LAST:event_tableRequsitionMouseClicked
-
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
+    private void tableRequesitonsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableRequesitonsMouseClicked
+        int index = tableRequesitons.getSelectedRow();
+        defaultTableModel = (DefaultTableModel) tableRequesitons.getModel();
+        urg = new UpdateReceivedGoods(defaultTableModel.getValueAt(index, 0).toString());
+        urg.setVisible(true);
+    }//GEN-LAST:event_tableRequesitonsMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -297,8 +230,6 @@ public class ViewPurchaseRequisition extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTable tableRequsition;
+    private javax.swing.JTable tableRequesitons;
     // End of variables declaration//GEN-END:variables
 }
