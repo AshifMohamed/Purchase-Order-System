@@ -5,26 +5,10 @@
  */
 package purchase.order.system.SiteManager;
 
-import static com.sun.xml.internal.fastinfoset.alphabet.BuiltInRestrictedAlphabets.table;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTable;
-import javax.swing.UIManager;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
+import static javax.swing.text.html.HTML.Tag.HEAD;
 import purchase.order.system.Public.FrameDrag;
 
 /**
@@ -675,11 +659,8 @@ public class SiteManagerHome extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
-<<<<<<< HEAD
-=======
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel_payment;
->>>>>>> 16cfa09f5852864530bb1c52d756e42440d9edd6
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JPanel panelGRN;
     private javax.swing.JPanel sidePanel;
