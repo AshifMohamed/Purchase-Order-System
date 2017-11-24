@@ -5,10 +5,26 @@
  */
 package purchase.order.system.SiteManager;
 
+import static com.sun.xml.internal.fastinfoset.alphabet.BuiltInRestrictedAlphabets.table;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.UIManager;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
-import static javax.swing.text.html.HTML.Tag.HEAD;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import purchase.order.system.Public.FrameDrag;
 
 /**
@@ -23,22 +39,16 @@ public class SiteManagerHome extends javax.swing.JFrame {
     private FrameDrag frameDragListener; 
     PurchaseRequsition pr;
     ViewPurchaseRequisition vr;
-
-    GoodsReceiveNote grn;
-
     Payment py;
-
+    GoodsReceiveNote grn;
 
     public SiteManagerHome() {
         initComponents();
 
         pr = new PurchaseRequsition();
         vr = new ViewPurchaseRequisition();
-
-        grn=new  GoodsReceiveNote();
-
         py = new Payment();
-
+        grn=new GoodsReceiveNote();
         pr.setVisible(true);
 //         pr.setResizable(true);
 //         pr.setPreferredSize(new Dimension(jPanel1.getHeight(), jPanel1.getWidth()));
@@ -47,20 +57,14 @@ public class SiteManagerHome extends javax.swing.JFrame {
      //   BasicInternalFrameUI bi = (BasicInternalFrameUI) pr.getUI();
         removeFrameBorder((BasicInternalFrameUI) pr.getUI());
         removeFrameBorder((BasicInternalFrameUI) vr.getUI());
-
-        removeFrameBorder((BasicInternalFrameUI) grn.getUI());
-        // pan=new NewJPanel();
-        jDesktopPane1.add(pr);
-        jDesktopPane1.add(vr);
-        jDesktopPane1.add(grn);
-
         removeFrameBorder((BasicInternalFrameUI) py.getUI());
+        removeFrameBorder((BasicInternalFrameUI) grn.getUI());
 
         // pan=new NewJPanel();
         jDesktopPane1.add(pr);
         jDesktopPane1.add(vr);
         jDesktopPane1.add(py);
-
+        jDesktopPane1.add(grn);
 
          frameDragListener = new FrameDrag(this);
          frameDragListener.mouseDrag();
@@ -158,6 +162,9 @@ public class SiteManagerHome extends javax.swing.JFrame {
         jPanel5.setBackground(new java.awt.Color(47, 26, 105));
         jPanel5.setToolTipText("");
         jPanel5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel5MouseClicked(evt);
+            }
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 jPanel5MousePressed(evt);
             }
@@ -322,6 +329,9 @@ public class SiteManagerHome extends javax.swing.JFrame {
         panelGRN.setBackground(new java.awt.Color(47, 26, 105));
         panelGRN.setToolTipText("");
         panelGRN.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                panelGRNMouseClicked(evt);
+            }
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 panelGRNMousePressed(evt);
             }
@@ -498,7 +508,7 @@ public class SiteManagerHome extends javax.swing.JFrame {
         resetColor(jPanel3);
         resetColor(jPanel4);
         resetColor(jPanel6);
-        resetColor(jPanel7);
+        resetColor(panelGRN);
         
         //activating the respective jInternalPanel
         pr.setVisible(false);
@@ -519,7 +529,7 @@ public class SiteManagerHome extends javax.swing.JFrame {
         resetColor(jPanel4);
         resetColor(jPanel5);
         resetColor(jPanel6);
-        resetColor(jPanel7);
+        resetColor(panelGRN);
         
         //activating the respective jInternalPanel
         pr.setVisible(true);
@@ -535,7 +545,7 @@ public class SiteManagerHome extends javax.swing.JFrame {
         resetColor(jPanel3);
         resetColor(jPanel5);
         resetColor(jPanel6);
-        resetColor(jPanel7);
+        resetColor(panelGRN);
         
         //activating the respective jInternalPanel
         vr.setVisible(true);
@@ -550,25 +560,15 @@ public class SiteManagerHome extends javax.swing.JFrame {
         resetColor(jPanel3);
         resetColor(jPanel4);
         resetColor(jPanel5);
-        resetColor(jPanel7);
+        resetColor(panelGRN);
         
         //activating the respective jInternalPanel
     }//GEN-LAST:event_jPanel6MousePressed
 
-
-    private void panelGRNMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelGRNMousePressed
-        setColor(panelGRN);
-        resetColor(jPanel3);
-        resetColor(jPanel5);
-        grn.setVisible(true);
-        vr.setVisible(false);
-        pr.setVisible(false);
-    }//GEN-LAST:event_panelGRNMousePressed
-
     private void jPanel7MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel7MousePressed
         // TODO add your handling code here:
         //button activation animation
-        setColor(jPanel7);
+        setColor(panelGRN);
         resetColor(jPanel_payment);
         resetColor(jPanel3);
         resetColor(jPanel4);
@@ -578,7 +578,6 @@ public class SiteManagerHome extends javax.swing.JFrame {
         //activating the respective jInternalPanel
     }//GEN-LAST:event_jPanel7MousePressed
 
-
     private void jPanel_paymentMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel_paymentMousePressed
         // TODO add your handling code here:
         //button activation animation
@@ -587,7 +586,7 @@ public class SiteManagerHome extends javax.swing.JFrame {
         resetColor(jPanel4);
         resetColor(jPanel5);
         resetColor(jPanel6);
-        resetColor(jPanel7);
+        resetColor(panelGRN);
         
         //activating the respective jInternalPanel
         py.setVisible(true);
@@ -595,6 +594,28 @@ public class SiteManagerHome extends javax.swing.JFrame {
         pr.setVisible(false);
     }//GEN-LAST:event_jPanel_paymentMousePressed
 
+    private void jPanel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel5MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jPanel5MouseClicked
+
+    private void panelGRNMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelGRNMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_panelGRNMouseClicked
+    private void panelGRNMousePressed(java.awt.event.MouseEvent evt) {                                      
+        // TODO add your handling code here:
+        setColor(panelGRN );
+        resetColor(jPanel3);
+        resetColor(jPanel4);
+        resetColor(jPanel5);
+        resetColor(jPanel6);
+        resetColor(jPanel_payment);
+        
+        //activating the respective jInternalPanel
+        py.setVisible(false);
+        vr.setVisible(false);
+        pr.setVisible(false);
+        grn.setVisible(true);
+    } 
     /**
      * @param args the command line arguments
      */
@@ -659,7 +680,6 @@ public class SiteManagerHome extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel_payment;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JPanel panelGRN;

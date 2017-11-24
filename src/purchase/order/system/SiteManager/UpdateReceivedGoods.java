@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -32,10 +33,11 @@ public class UpdateReceivedGoods extends javax.swing.JFrame {
     /**
      * Creates new form ViewSingleRequisition
      */
-    private String reqNo;
+    private int reqNo;
     private PurchaseRequsitionModel pr;
     private DefaultTableModel table;
     private FrameDrag frameDragListener;
+    GoodsReceivedDBUtils dBUtils = new GoodsReceivedDBUtils();
     ResultSet requisition;
     ResultSet requisitionItems;
     ResultSet itemsDetails;
@@ -48,7 +50,7 @@ public class UpdateReceivedGoods extends javax.swing.JFrame {
         frameDragListener.mouseDrag();
     }
 
-    public UpdateReceivedGoods(String reqNo) {
+    public UpdateReceivedGoods(int reqNo) {
         initComponents();
         this.reqNo = reqNo;
         table = (DefaultTableModel) tableUpdateReceivedGoods.getModel();
@@ -327,11 +329,11 @@ public class UpdateReceivedGoods extends javax.swing.JFrame {
 
     private void setRequisitionData() {
 
-        requisition = pr.getSingleRequisitionDetail(reqNo);
+        requisition = pr.getSingleRequisitionDetail(Integer.toString(reqNo));
 
         try {
             if (requisition.next()) {
-                lblReqNo.setText(reqNo);
+                lblReqNo.setText(Integer.toString(reqNo));
                 lblDate.setText(requisition.getString("APPLIED DATE"));
                 lblReqDate.setText(requisition.getString("REQ.DATE"));
                 txtComments.setText(requisition.getString("COMMENT"));
@@ -350,16 +352,11 @@ public class UpdateReceivedGoods extends javax.swing.JFrame {
 
     public void requsitionTableLoad() {
         try (Connection dbConnection = DBConn.myConn()) {
-                requisitionItems = dbConnection.createStatement().executeQuery("select ItemId as ITEMID   , OrderQuantity as ORDEREDQUANTITY  from requisitionitems where RequisitionNo='"+reqNo+"'");
-                DefaultTableModel tableModel = (DefaultTableModel) DbUtils.resultSetToTableModel(requisitionItems);
-                tableModel.addColumn("DELIVERED QUANTITES");
-                tableModel.addColumn("DAMAGED");
-                tableModel.addColumn("UPDATE");
-                
-                tableUpdateReceivedGoods.setModel(tableModel);
-                tableUpdateReceivedGoods.getColumn("UPDATE").setCellRenderer(new ButtonRenderer("UPDATE"));
-                setTableHeaderColor();
-         
+            requisitionItems = dbConnection.createStatement().executeQuery("select ItemId as ITEMID   , OrderQuantity as ORDEREDQUANTITY ,DeliveredQuantity as DELIVERED ,DamagedQuantity as DAMAGED from requisitionitems where RequisitionNo='" + reqNo + "' and Status='Pending' ");
+            DefaultTableModel tableModel = (DefaultTableModel) DbUtils.resultSetToTableModel(requisitionItems);
+            tableModel.addColumn("UPDATE");
+            tableUpdateReceivedGoods.setModel(tableModel);
+            tableUpdateReceivedGoods.getColumn("UPDATE").setCellRenderer(new ButtonRenderer("UPDATE"));
             setTableHeaderColor();
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -370,21 +367,17 @@ public class UpdateReceivedGoods extends javax.swing.JFrame {
     private void setTableHeaderColor() {
 
         JTableHeader th = tableUpdateReceivedGoods.getTableHeader();
-
         TableColumnModel tcm = th.getColumnModel();
         TableColumn tc1 = tcm.getColumn(0);
         TableColumn tc2 = tcm.getColumn(1);
         TableColumn tc3 = tcm.getColumn(2);
         TableColumn tc4 = tcm.getColumn(3);
         TableColumn tc5 = tcm.getColumn(4);
-       
-
         tc1.setHeaderRenderer(new headerCellRenderer());
         tc2.setHeaderRenderer(new headerCellRenderer());
         tc3.setHeaderRenderer(new headerCellRenderer());
         tc4.setHeaderRenderer(new headerCellRenderer());
         tc5.setHeaderRenderer(new headerCellRenderer());
-      
     }
 
     class headerCellRenderer extends DefaultTableCellRenderer {
@@ -393,17 +386,55 @@ public class UpdateReceivedGoods extends javax.swing.JFrame {
             Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, 0, 3);
             c.setBackground(new Color(47, 6, 152));
             c.setForeground(Color.white);
-
             return c;
         }
 
     }
 
-    private void FillTable() {
-
-    }
     private void tableUpdateReceivedGoodsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableUpdateReceivedGoodsMouseClicked
-        // TODO add your handling code here:
+        int row = tableUpdateReceivedGoods.rowAtPoint(evt.getPoint());
+        int col = tableUpdateReceivedGoods.columnAtPoint(evt.getPoint());
+        if (col == 4) {
+            if (tableUpdateReceivedGoods.getValueAt(row, 2) != null && dBUtils.checkNull(tableUpdateReceivedGoods.getValueAt(row, 2).toString())) {
+                if (dBUtils.checkPostive(Double.parseDouble(tableUpdateReceivedGoods.getValueAt(row, 2).toString())) && dBUtils.checkPostive(Double.parseDouble(tableUpdateReceivedGoods.getValueAt(row, 3).toString()))) {
+
+                    if (Double.parseDouble(tableUpdateReceivedGoods.getValueAt(row, 1).toString()) > Double.parseDouble(tableUpdateReceivedGoods.getValueAt(row, 1).toString())) {
+                        JOptionPane.showMessageDialog(null, "Deliverd Quantity can not be greater than Ordered Quantity");
+                    } else {
+                        RequesitionItems requesitionItems = new RequesitionItems();
+                        requesitionItems.setRewuesitionNo(reqNo);
+                        requesitionItems.setItemNo(Integer.parseInt(tableUpdateReceivedGoods.getValueAt(row, 0).toString()));
+                        requesitionItems.setOrderedQuantity(Double.parseDouble(tableUpdateReceivedGoods.getValueAt(row, 1).toString()));
+                        requesitionItems.setDeliveredQuantity(Double.parseDouble(tableUpdateReceivedGoods.getValueAt(row, 2).toString()));
+                        if (Double.parseDouble(tableUpdateReceivedGoods.getValueAt(row, 1).toString()) == Double.parseDouble(tableUpdateReceivedGoods.getValueAt(row, 2).toString())) {
+                            requesitionItems.setStatus("Received");
+                        } else {
+                            requesitionItems.setStatus("Pending");
+                        }
+                        if (tableUpdateReceivedGoods.getValueAt(row, 3) != null && dBUtils.checkNull(tableUpdateReceivedGoods.getValueAt(row, 3).toString())) {
+
+                            requesitionItems.setDamagedQuantity(Double.parseDouble(tableUpdateReceivedGoods.getValueAt(row, 3).toString()));
+                            if (dBUtils.updateGoodReceiveDetail(requesitionItems)) {
+                                JOptionPane.showMessageDialog(null, "Recorde Updated Successfully");
+                                if (requesitionItems.getDamagedQuantity() > 0) {
+                                    dBUtils.notifySupplier(requesitionItems);
+                                }
+                            }
+
+                        }
+                        requsitionTableLoad();
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please Insert positive values for quantites");
+
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Deliverd Quantity can not be empty");
+
+            }
+
+        }
+
 
     }//GEN-LAST:event_tableUpdateReceivedGoodsMouseClicked
 

@@ -9,11 +9,13 @@ import java.awt.Component;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import javax.swing.JTable;
+import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableRowSorter;
 import purchase.order.system.Public.DBConn;
 
 
@@ -47,36 +49,36 @@ public class GoodsReceiveNote extends javax.swing.JInternalFrame {
         }
     }
 
-    class headerCellRenderer extends DefaultTableCellRenderer {
-
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, 0, 3);
-            c.setBackground(new Color(47, 6, 152));
-            c.setForeground(Color.white);
-
-            return c;
-        }
-
-    }
-    
-    private void setTableHeaderColor() {
+        private void setTableHeaderColor() {
 
         JTableHeader th = tableRequesitons.getTableHeader();
-
         TableColumnModel tcm = th.getColumnModel();
         TableColumn tc1 = tcm.getColumn(0);
         TableColumn tc2 = tcm.getColumn(1);
         TableColumn tc3 = tcm.getColumn(2);
         TableColumn tc4 = tcm.getColumn(3);
         TableColumn tc5 = tcm.getColumn(4);
-        TableColumn tc6 = tcm.getColumn(5);
-
         tc1.setHeaderRenderer(new headerCellRenderer());
         tc2.setHeaderRenderer(new headerCellRenderer());
         tc3.setHeaderRenderer(new headerCellRenderer());
         tc4.setHeaderRenderer(new headerCellRenderer());
         tc5.setHeaderRenderer(new headerCellRenderer());
-        
+    }
+
+    class headerCellRenderer extends DefaultTableCellRenderer {
+
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, 0, 3);
+            c.setBackground(new Color(47, 6, 152));
+            c.setForeground(Color.white);
+            return c;
+        }
+
+    }
+     public void getRequesitionById(String id) {
+        TableRowSorter<DefaultTableModel> tableRowSorterById = new TableRowSorter<DefaultTableModel>(defaultTableModel);
+        tableRequesitons.setRowSorter(tableRowSorterById);
+        tableRowSorterById.setRowFilter(RowFilter.regexFilter(id, 0));
     }
     
 
@@ -97,6 +99,8 @@ public class GoodsReceiveNote extends javax.swing.JInternalFrame {
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableRequesitons = new javax.swing.JTable();
+        jLabel1 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
 
         setBorder(null);
         setMinimumSize(new java.awt.Dimension(0, 0));
@@ -152,19 +156,38 @@ public class GoodsReceiveNote extends javax.swing.JInternalFrame {
         });
         jScrollPane1.setViewportView(tableRequesitons);
 
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
+        jLabel1.setText("Search Requesition :");
+
+        jTextField1.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
+        jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextField1KeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap(20, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 722, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 722, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(81, Short.MAX_VALUE)
+                .addGap(31, 31, 31)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(28, 28, 28))
         );
@@ -209,7 +232,7 @@ public class GoodsReceiveNote extends javax.swing.JInternalFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 560, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 572, Short.MAX_VALUE)
         );
 
         pack();
@@ -218,18 +241,24 @@ public class GoodsReceiveNote extends javax.swing.JInternalFrame {
     private void tableRequesitonsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableRequesitonsMouseClicked
         int index = tableRequesitons.getSelectedRow();
         defaultTableModel = (DefaultTableModel) tableRequesitons.getModel();
-        urg = new UpdateReceivedGoods(defaultTableModel.getValueAt(index, 0).toString());
+        urg = new UpdateReceivedGoods(Integer.parseInt(defaultTableModel.getValueAt(index, 0).toString()));
         urg.setVisible(true);
     }//GEN-LAST:event_tableRequesitonsMouseClicked
 
+    private void jTextField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyReleased
+        getRequesitionById( jTextField1.getText());
+    }//GEN-LAST:event_jTextField1KeyReleased
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField jTextField1;
     private javax.swing.JTable tableRequesitons;
     // End of variables declaration//GEN-END:variables
 }

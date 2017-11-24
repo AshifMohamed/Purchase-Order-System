@@ -10,28 +10,29 @@ package purchase.order.system.SiteManager;
  * @author Neruppuda
  */
 public class GoodsDamaged {
-    private String rewuesitionNo;
-    private String itemNo;
+    private int rewuesitionNo;
+    private int itemNo;
     private double orderedQuantity;
     private double deliveredQuantity;
     private double damagedQantity;
 
-    public String getRewuesitionNo() {
+    public int getRewuesitionNo() {
         return rewuesitionNo;
     }
 
-    public void setRewuesitionNo(String rewuesitionNo) {
+    public void setRewuesitionNo(int rewuesitionNo) {
         this.rewuesitionNo = rewuesitionNo;
     }
 
-    public String getItemNo() {
+    public int getItemNo() {
         return itemNo;
     }
 
-    public void setItemNo(String itemNo) {
+    public void setItemNo(int itemNo) {
         this.itemNo = itemNo;
     }
 
+ 
     public double getOrderedQuantity() {
         return orderedQuantity;
     }

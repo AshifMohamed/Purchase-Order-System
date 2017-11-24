@@ -11,36 +11,57 @@ package purchase.order.system.SiteManager;
  */
 public class RequesitionItems {
    
-    private String rewuesitionNo;
-    private String itemNo;
-    private String finalPrice;
+    private int rewuesitionNo;
+    private int itemNo;
+    private double finalPrice;
     private double orderedQuantity;
     private double deliveredQuantity;
+    private double damagedQuantity;
+    private String status;
 
-    public String getRewuesitionNo() {
+    public double getDamagedQuantity() {
+        return damagedQuantity;
+    }
+
+    public void setDamagedQuantity(double damagedQuantity) {
+        this.damagedQuantity = damagedQuantity;
+    }
+
+    
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+    
+
+    public int getRewuesitionNo() {
         return rewuesitionNo;
     }
 
-    public void setRewuesitionNo(String rewuesitionNo) {
+    public void setRewuesitionNo(int rewuesitionNo) {
         this.rewuesitionNo = rewuesitionNo;
     }
 
-    public String getItemNo() {
+    public int getItemNo() {
         return itemNo;
     }
 
-    public void setItemNo(String itemNo) {
+    public void setItemNo(int itemNo) {
         this.itemNo = itemNo;
     }
 
-    public String getFinalPrice() {
+    public double getFinalPrice() {
         return finalPrice;
     }
 
-    public void setFinalPrice(String finalPrice) {
+    public void setFinalPrice(double finalPrice) {
         this.finalPrice = finalPrice;
     }
 
+  
     public double getOrderedQuantity() {
         return orderedQuantity;
     }
