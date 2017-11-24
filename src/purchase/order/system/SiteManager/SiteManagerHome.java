@@ -39,12 +39,14 @@ public class SiteManagerHome extends javax.swing.JFrame {
     private FrameDrag frameDragListener; 
     PurchaseRequsition pr;
     ViewPurchaseRequisition vr;
+    Payment py;
 
     public SiteManagerHome() {
         initComponents();
 
         pr = new PurchaseRequsition();
         vr = new ViewPurchaseRequisition();
+        py = new Payment();
         pr.setVisible(true);
 //         pr.setResizable(true);
 //         pr.setPreferredSize(new Dimension(jPanel1.getHeight(), jPanel1.getWidth()));
@@ -53,10 +55,12 @@ public class SiteManagerHome extends javax.swing.JFrame {
      //   BasicInternalFrameUI bi = (BasicInternalFrameUI) pr.getUI();
         removeFrameBorder((BasicInternalFrameUI) pr.getUI());
         removeFrameBorder((BasicInternalFrameUI) vr.getUI());
+        removeFrameBorder((BasicInternalFrameUI) py.getUI());
 
         // pan=new NewJPanel();
         jDesktopPane1.add(pr);
         jDesktopPane1.add(vr);
+        jDesktopPane1.add(py);
 
          frameDragListener = new FrameDrag(this);
          frameDragListener.mouseDrag();
@@ -132,6 +136,9 @@ public class SiteManagerHome extends javax.swing.JFrame {
         jPanel7 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
+        jPanel_payment = new javax.swing.JPanel();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel15 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
@@ -351,6 +358,45 @@ public class SiteManagerHome extends javax.swing.JFrame {
 
         sidePanel.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 230, 210, -1));
 
+        jPanel_payment.setBackground(new java.awt.Color(47, 26, 105));
+        jPanel_payment.setToolTipText("");
+        jPanel_payment.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jPanel_paymentMousePressed(evt);
+            }
+        });
+
+        jLabel12.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/correct.JPG"))); // NOI18N
+
+        jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        jLabel13.setForeground(new java.awt.Color(204, 204, 204));
+        jLabel13.setText("PAYMENTS");
+
+        javax.swing.GroupLayout jPanel_paymentLayout = new javax.swing.GroupLayout(jPanel_payment);
+        jPanel_payment.setLayout(jPanel_paymentLayout);
+        jPanel_paymentLayout.setHorizontalGroup(
+            jPanel_paymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel_paymentLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel12)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(29, Short.MAX_VALUE))
+        );
+        jPanel_paymentLayout.setVerticalGroup(
+            jPanel_paymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel_paymentLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+            .addGroup(jPanel_paymentLayout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addComponent(jLabel13)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        sidePanel.add(jPanel_payment, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 330, -1, -1));
+
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel15.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -446,10 +492,18 @@ public class SiteManagerHome extends javax.swing.JFrame {
 
     private void jPanel5MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel5MousePressed
         // TODO add your handling code here:
+        //button activation animation
         setColor(jPanel5);
+        resetColor(jPanel_payment);
         resetColor(jPanel3);
         resetColor(jPanel4);
+        resetColor(jPanel6);
+        resetColor(jPanel7);
+        
+        //activating the respective jInternalPanel
         pr.setVisible(false);
+        py.setVisible(false);
+        vr.setVisible(false);
     }//GEN-LAST:event_jPanel5MousePressed
 
     private void jLabel9MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel9MousePressed
@@ -459,30 +513,76 @@ public class SiteManagerHome extends javax.swing.JFrame {
 
     private void jPanel3MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel3MousePressed
         // TODO add your handling code here:
+        //button activation animation
         setColor(jPanel3);
+        resetColor(jPanel_payment);
         resetColor(jPanel4);
         resetColor(jPanel5);
+        resetColor(jPanel6);
+        resetColor(jPanel7);
+        
+        //activating the respective jInternalPanel
         pr.setVisible(true);
-        vr.setVisible(true);
+        vr.setVisible(false);
+        py.setVisible(false);
     }//GEN-LAST:event_jPanel3MousePressed
 
     private void jPanel4MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel4MousePressed
         // TODO add your handling code here:
+        //button activation animation
         setColor(jPanel4);
+        resetColor(jPanel_payment);
         resetColor(jPanel3);
         resetColor(jPanel5);
+        resetColor(jPanel6);
+        resetColor(jPanel7);
+        
+        //activating the respective jInternalPanel
         vr.setVisible(true);
         pr.setVisible(false);
-
     }//GEN-LAST:event_jPanel4MousePressed
 
     private void jPanel6MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel6MousePressed
         // TODO add your handling code here:
+        //button activation animation
+        setColor(jPanel6);
+        resetColor(jPanel_payment);
+        resetColor(jPanel3);
+        resetColor(jPanel4);
+        resetColor(jPanel5);
+        resetColor(jPanel7);
+        
+        //activating the respective jInternalPanel
     }//GEN-LAST:event_jPanel6MousePressed
 
     private void jPanel7MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel7MousePressed
         // TODO add your handling code here:
+        //button activation animation
+        setColor(jPanel7);
+        resetColor(jPanel_payment);
+        resetColor(jPanel3);
+        resetColor(jPanel4);
+        resetColor(jPanel5);
+        resetColor(jPanel6);
+        
+        //activating the respective jInternalPanel
     }//GEN-LAST:event_jPanel7MousePressed
+
+    private void jPanel_paymentMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel_paymentMousePressed
+        // TODO add your handling code here:
+        //button activation animation
+        setColor(jPanel_payment);
+        resetColor(jPanel3);
+        resetColor(jPanel4);
+        resetColor(jPanel5);
+        resetColor(jPanel6);
+        resetColor(jPanel7);
+        
+        //activating the respective jInternalPanel
+        py.setVisible(true);
+        vr.setVisible(false);
+        pr.setVisible(false);
+    }//GEN-LAST:event_jPanel_paymentMousePressed
 
     /**
      * @param args the command line arguments
@@ -530,6 +630,8 @@ public class SiteManagerHome extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
@@ -547,6 +649,7 @@ public class SiteManagerHome extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel_payment;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JPanel sidePanel;
     // End of variables declaration//GEN-END:variables
