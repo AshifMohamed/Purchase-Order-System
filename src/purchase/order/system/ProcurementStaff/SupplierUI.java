@@ -12,6 +12,8 @@ import java.sql.ResultSet;
 import javax.swing.JOptionPane;
 import net.proteanit.sql.DbUtils;
 import purchase.order.system.Public.DBConn;
+import net.sf.jasperreports.view.*;
+import net.sf.jasperreports.engine.*;
 
 /**
  *
@@ -112,6 +114,7 @@ public class SupplierUI extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblsupplier = new javax.swing.JTable();
         jSeparator1 = new javax.swing.JSeparator();
+        btnreport = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(204, 204, 204));
@@ -227,7 +230,7 @@ public class SupplierUI extends javax.swing.JFrame {
                 btnupdateActionPerformed(evt);
             }
         });
-        getContentPane().add(btnupdate, new org.netbeans.lib.awtextra.AbsoluteConstraints(589, 235, 163, 30));
+        getContentPane().add(btnupdate, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 220, 163, 30));
 
         btninsert.setText("+ Add Suppliers");
         btninsert.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -240,7 +243,7 @@ public class SupplierUI extends javax.swing.JFrame {
                 btninsertActionPerformed(evt);
             }
         });
-        getContentPane().add(btninsert, new org.netbeans.lib.awtextra.AbsoluteConstraints(409, 235, 140, 30));
+        getContentPane().add(btninsert, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 220, 140, 30));
 
         jLabel13.setText("Search By ID");
         getContentPane().add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(52, 325, 100, -1));
@@ -313,6 +316,14 @@ public class SupplierUI extends javax.swing.JFrame {
 
         getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(32, 429, 720, 188));
         getContentPane().add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(63, 309, 709, -1));
+
+        btnreport.setText("Generate Report");
+        btnreport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnreportActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnreport, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 280, 160, -1));
 
         setSize(new java.awt.Dimension(869, 667));
         setLocationRelativeTo(null);
@@ -552,6 +563,22 @@ public class SupplierUI extends javax.swing.JFrame {
 
     }//GEN-LAST:event_tblsupplierMouseClicked
 
+    private void btnreportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnreportActionPerformed
+        // TODO add your handling code here:
+        B_REPORT_ACTION();
+    }//GEN-LAST:event_btnreportActionPerformed
+
+    public void B_REPORT_ACTION() {
+
+        try {
+            String REPORT = "C:\\Users\\Umani Welisara\\Documents\\Projects\\Purchase-Order-System\\src\\purchase\\order\\system\\ProcurementStaff\\SupplierReport.jrxml";
+            JasperReport JASP_REP = JasperCompileManager.compileReport(REPORT);
+            JasperPrint JASP_PRINT = JasperFillManager.fillReport(JASP_REP, null, conn);
+            JasperViewer.viewReport(JASP_PRINT);
+        } catch (Exception x) {
+            System.out.print(x);
+        }
+    }
     /**
      * @param args the command line arguments
      */
@@ -591,6 +618,7 @@ public class SupplierUI extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnclear;
     private javax.swing.JButton btninsert;
+    private javax.swing.JButton btnreport;
     private javax.swing.JButton btnsearchbyemail;
     private javax.swing.JButton btnsearchbyid1;
     private javax.swing.JButton btnsearchbyname;
