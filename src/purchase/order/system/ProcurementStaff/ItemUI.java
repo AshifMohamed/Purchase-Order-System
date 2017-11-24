@@ -359,6 +359,7 @@ public class ItemUI extends javax.swing.JFrame {
         // TODO add your handling code here:
 
         String searchByID = txtsearchbyid.getText();
+        //Field Validation
         if (txtsearchbyid.getText().equalsIgnoreCase("")) {
             JOptionPane.showMessageDialog(null, "Field is Empty ! ", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -380,6 +381,7 @@ public class ItemUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         String searchByCategory = cmbsearchbyicategory.getSelectedItem().toString();
 
+        //Field Validation
         if (cmbsearchbyicategory.getSelectedItem() == "-- select --") {
             JOptionPane.showMessageDialog(null, "Field is not selected ! ", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -404,7 +406,7 @@ public class ItemUI extends javax.swing.JFrame {
         String description = tblitem.getValueAt(item, 2).toString();
         String agreedprice = tblitem.getValueAt(item, 3).toString();
         String restrictedStatus = tblitem.getValueAt(item, 4).toString();
-        
+
         lblitemid.setText(itemid);
         cmbicategory.setSelectedItem(category);
         txtareadescription.setText(description);
@@ -436,18 +438,18 @@ public class ItemUI extends javax.swing.JFrame {
             return;
         }
 
-//        //price validation-------------------------------------------------------------------------------
-//        double num = 0.00;
-//        try {
-//            num = Double.parseDouble(agreedprice);
-//        } catch (NumberFormatException e) {
-//            JOptionPane.showMessageDialog(null, "Qty should be an number", "Error", JOptionPane.ERROR_MESSAGE);
-//            return;
-//        }
-//        if (num > 50.00 || num < 100000.00) {
-//            JOptionPane.showMessageDialog(null, "Please enter quantity between 1 - 15", "Error", JOptionPane.ERROR_MESSAGE);
-//            return;
-//        }
+        //price validation-------------------------------------------------------------------------------
+        double num = 0.00;
+        try {
+            num = Double.parseDouble(agreedprice);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "price should be a number", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (num < 50.00 || num > 100000.00) {
+            JOptionPane.showMessageDialog(null, "Price should be between Rs50.00 - Rs100000.00", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 //        //...............................................................
         ItemModel im = new ItemModel(category, description, agreedprice, restrictedStatus);
         boolean successStatus = im.insertItem();
@@ -477,13 +479,11 @@ public class ItemUI extends javax.swing.JFrame {
             String agreedprice = txtagreedprice.getText();
             String restrictedStatus = cmbrestrictedstatus.getSelectedItem().toString();
 
+            //Required field validation
             if (cmbicategory.getSelectedItem() == "-- select --" || txtareadescription.getText().equalsIgnoreCase("") || txtagreedprice.getText().equalsIgnoreCase("")) {
                 JOptionPane.showMessageDialog(null, "Please fill the required fields", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            //if(cmbicategory.getSelectedItem() == "other" &&txtareadescription.getText().equalsIgnoreCase("") ){
-           // return;
-           // }
 
             ItemModel im = new ItemModel(itemid, category, description, agreedprice, restrictedStatus);
             boolean successStatus = im.updateItem();

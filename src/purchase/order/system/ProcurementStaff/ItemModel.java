@@ -14,54 +14,54 @@ import purchase.order.system.Public.DBConn;
  * @author Umani Welisara
  */
 public class ItemModel {
-    
+
     private String itemId;
     private String category;
     private String description;
     private String agreedPrice;
     private String restrictedStatus;
-    
-    public ItemModel (String itemId,String category,String description,String agreedPrice,String restrictedStatus){
-    this.itemId = itemId;
-    this.category = category;
-    this.description = description;
-    this.agreedPrice = agreedPrice;
-    this.restrictedStatus = restrictedStatus;
-    
-    
+
+    public ItemModel(String itemId, String category, String description, String agreedPrice, String restrictedStatus) {
+        this.itemId = itemId;
+        this.category = category;
+        this.description = description;
+        this.agreedPrice = agreedPrice;
+        this.restrictedStatus = restrictedStatus;
+
     }
-    public ItemModel (String category,String description,String agreedPrice,String restrictedStatus){
-    
-    this.category = category;
-    this.description = description;
-    this.agreedPrice = agreedPrice;
-    this.restrictedStatus = restrictedStatus;
-    
+
+    public ItemModel(String category, String description, String agreedPrice, String restrictedStatus) {
+
+        this.category = category;
+        this.description = description;
+        this.agreedPrice = agreedPrice;
+        this.restrictedStatus = restrictedStatus;
+
     }
-    
-    public boolean insertItem(){
-    try {
+
+    public boolean insertItem() {
+        try {
             String s = "insert into item (category,description,agreedPrice,restrictedStatus) values (?,?,?,?)";
             PreparedStatement pst = DBConn.myConn().prepareStatement(s);
 
             pst.setString(1, this.category);
             pst.setString(2, this.description);
             pst.setDouble(3, Double.parseDouble(this.agreedPrice));
-             pst.setInt(4, Boolean.parseBoolean(this.restrictedStatus)?1:0);
-            
+            pst.setInt(4, Boolean.parseBoolean(this.restrictedStatus) ? 1 : 0);
+
             pst.execute();
             return true;
         } catch (SQLException ex) {
-             ex.printStackTrace();
+            ex.printStackTrace();
             return false;
         }
-    
-    
+
     }
-    public boolean updateItem(){
-    
-    try {
-            
+
+    public boolean updateItem() {
+
+        try {
+
             String q = "update item set category=?,description=?,agreedPrice=?,restrictedStatus=? where itemId=?";
 
             PreparedStatement pst = DBConn.myConn().prepareStatement(q);
@@ -69,8 +69,8 @@ public class ItemModel {
             pst.setString(1, this.category);
             pst.setString(2, this.description);
             pst.setDouble(3, Double.parseDouble(this.agreedPrice));
-            
-            pst.setInt(4, Boolean.parseBoolean(this.restrictedStatus)?1:0);
+
+            pst.setInt(4, Boolean.parseBoolean(this.restrictedStatus) ? 1 : 0);
             pst.setInt(5, Integer.parseInt(this.itemId.replaceAll("ITM", "")));
             System.out.println(pst.toString());
             pst.executeUpdate();
@@ -78,10 +78,10 @@ public class ItemModel {
             return true;
 
         } catch (Exception ex) {
-             ex.printStackTrace();
+            ex.printStackTrace();
             return false;
         }
-     
+
     }
 
     public String getItemId() {
@@ -123,5 +123,5 @@ public class ItemModel {
     public void setRestrictedStatus(String restrictedStatus) {
         this.restrictedStatus = restrictedStatus;
     }
-    
+
 }

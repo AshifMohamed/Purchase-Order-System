@@ -51,8 +51,7 @@ public class SupplierUI extends javax.swing.JFrame {
     public boolean tableload() {
 
         try {
-            
-            //
+
             String sql = "select concat('SUP',supplierId) as 'Supplier ID',supplierName as 'Supplier Name',supplierAddress as 'Address',"
                     + "supplierCity as 'City',supplierProvince as 'Province',supplierPostalCode as 'PostalCode',"
                     + "supplierPhone as 'Phone',supplierEmail as 'Email',supplierApproval as 'Approval' from supplier";
@@ -357,27 +356,25 @@ public class SupplierUI extends javax.swing.JFrame {
             String supplierEmail = txtemail.getText();
             String supplierApproval = cmbsupplierapproval.getSelectedItem().toString();
 
+            //Required Field validation
             if (txtsuppliername.getText().equalsIgnoreCase("") || txtaddress.getText().equalsIgnoreCase("") || txtcity.getText().equalsIgnoreCase("")
-                    || cmbprovince.getSelectedItem() == "-- select --" || txtpostalcode.getText().equalsIgnoreCase("") || txtphone.getText().equalsIgnoreCase("") || txtemail.getText().equalsIgnoreCase("")
-                    || cmbsupplierapproval.getSelectedItem() == "-- select --") {
+                    || cmbprovince.getSelectedItem() == "-- select --" || txtpostalcode.getText().equalsIgnoreCase("") || txtphone.getText().equalsIgnoreCase("") || txtemail.getText().equalsIgnoreCase("")) {
                 JOptionPane.showMessageDialog(null, "Please fill the required fields", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
+            //Validtations
             if (ValidateSupplier.checkPhone(txtphone.getText())) {
-             //   JOptionPane.showMessageDialog(null, "Please enter valid phone number", "Error", JOptionPane.ERROR_MESSAGE);
+                //   JOptionPane.showMessageDialog(null, "Please enter valid phone number", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             if (ValidateSupplier.validateMail(txtemail.getText())) {
-              //  JOptionPane.showMessageDialog(null, "wrong format of email", "Error", JOptionPane.ERROR_MESSAGE);
+                //  JOptionPane.showMessageDialog(null, "wrong format of email", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-           // if (ValidateSupplier.validateCity(txtcity.getText())) {
-            //    JOptionPane.showMessageDialog(null, "wrong format of city", "Error", JOptionPane.ERROR_MESSAGE);
-             //   return;
-            //}
+
             if (ValidateSupplier.validatePostalcode(txtpostalcode.getText())) {
-              //  JOptionPane.showMessageDialog(null, "wrong format of postalcode/state", "Error", JOptionPane.ERROR_MESSAGE);
+                //  JOptionPane.showMessageDialog(null, "wrong format of postalcode/state", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
@@ -420,14 +417,14 @@ public class SupplierUI extends javax.swing.JFrame {
         String supplierEmail = txtemail.getText();
         String supplierApproval = cmbsupplierapproval.getSelectedItem().toString();
 
+        //Required Field validation
         if (txtsuppliername.getText().equalsIgnoreCase("") || txtaddress.getText().equalsIgnoreCase("") || txtcity.getText().equalsIgnoreCase("")
-                || cmbprovince.getSelectedItem() == "-- select --" || txtpostalcode.getText().equalsIgnoreCase("") || txtphone.getText().equalsIgnoreCase("") || txtemail.getText().equalsIgnoreCase("")
-                ) {
+                || cmbprovince.getSelectedItem() == "-- select --" || txtpostalcode.getText().equalsIgnoreCase("") || txtphone.getText().equalsIgnoreCase("") || txtemail.getText().equalsIgnoreCase("")) {
             JOptionPane.showMessageDialog(null, "Please fill the required fields", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
 
+        //Validtations
         if (ValidateSupplier.checkPhone(txtphone.getText())) {
             //JOptionPane.showMessageDialog(null, "Please enter valid phone number", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -436,15 +433,11 @@ public class SupplierUI extends javax.swing.JFrame {
             //JOptionPane.showMessageDialog(null, "wrong format of email", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        //if (ValidateSupplier.validateCity(txtcity.getText())) {
-            // JOptionPane.showMessageDialog(null, "wrong format of city", "Error", JOptionPane.ERROR_MESSAGE);
-            //return;
-        //}
+
         if (ValidateSupplier.validatePostalcode(txtpostalcode.getText())) {
             // JOptionPane.showMessageDialog(null, "wrong format of postalcode/state", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
 
         SupplierModel sm = new SupplierModel(supplierName, supplierAddress, supplierCity, supplierProvince, supplierPostalCode, supplierPhone, supplierEmail, supplierApproval);
         boolean successStatus = sm.insertSupplier();
@@ -472,6 +465,7 @@ public class SupplierUI extends javax.swing.JFrame {
 
         String searchByID = txtsearchbyid.getText();
 
+        //Button validation
         if (txtsearchbyid.getText().equalsIgnoreCase("")) {
             JOptionPane.showMessageDialog(null, "Field is Empty ! ", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -492,6 +486,7 @@ public class SupplierUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         String searchByName = txtsearchbyname.getText();
 
+        //Button validation
         if (txtsearchbyname.getText().equalsIgnoreCase("")) {
             JOptionPane.showMessageDialog(null, "Field is Empty ! ", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -511,6 +506,7 @@ public class SupplierUI extends javax.swing.JFrame {
     private void btnsearchbyemailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsearchbyemailActionPerformed
         // TODO add your handling code here:
         String searchbyemail = this.txtsearchbyemail.getText();
+        //Button validation
         if (txtsearchbyemail.getText().equalsIgnoreCase("")) {
             JOptionPane.showMessageDialog(null, "Field is Empty ! ", "Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -549,7 +545,7 @@ public class SupplierUI extends javax.swing.JFrame {
         String supplierPostalCode = tblsupplier.getValueAt(supplier, 5).toString();
         String supplierPhone = tblsupplier.getValueAt(supplier, 6).toString();
         String supplierEmail = tblsupplier.getValueAt(supplier, 7).toString();
-       String supplierApproval = tblsupplier.getValueAt(supplier, 8).toString();
+        String supplierApproval = tblsupplier.getValueAt(supplier, 8).toString();
 
         lblsupplierid.setText(supplierId);
         txtsuppliername.setText(supplierName);
@@ -559,7 +555,7 @@ public class SupplierUI extends javax.swing.JFrame {
         txtpostalcode.setText(supplierPostalCode);
         txtphone.setText(supplierPhone);
         txtemail.setText(supplierEmail);
-       cmbsupplierapproval.setSelectedItem(supplierApproval);
+        cmbsupplierapproval.setSelectedItem(supplierApproval);
 
     }//GEN-LAST:event_tblsupplierMouseClicked
 
@@ -568,6 +564,7 @@ public class SupplierUI extends javax.swing.JFrame {
         B_REPORT_ACTION();
     }//GEN-LAST:event_btnreportActionPerformed
 
+    //generate report
     public void B_REPORT_ACTION() {
 
         try {
@@ -579,6 +576,7 @@ public class SupplierUI extends javax.swing.JFrame {
             System.out.print(x);
         }
     }
+
     /**
      * @param args the command line arguments
      */

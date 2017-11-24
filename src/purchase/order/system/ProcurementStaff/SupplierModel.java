@@ -26,7 +26,7 @@ public class SupplierModel {
     private String supplierApproval;
 
     public SupplierModel(String supplierId, String supplierName, String supplierAddress, String supplierCity, String supplierProvince, String supplierPostalCode, String supplierPhone, String supplierEmail, String supplierApproval) {
-        
+
         this.supplierId = supplierId;
         this.supplierName = supplierName;
         this.supplierAddress = supplierAddress;
@@ -64,7 +64,7 @@ public class SupplierModel {
             pst.setInt(5, Integer.parseInt(this.supplierPostalCode));
             pst.setInt(6, Integer.parseInt(this.supplierPhone));
             pst.setString(7, this.supplierEmail);
-            pst.setInt(8, Boolean.parseBoolean(this.supplierApproval)?1:0);
+            pst.setInt(8, Boolean.parseBoolean(this.supplierApproval) ? 1 : 0);
             pst.execute();
             return true;
         } catch (SQLException ex) {
@@ -88,7 +88,7 @@ public class SupplierModel {
             pst.setInt(5, Integer.parseInt(this.supplierPostalCode));
             pst.setInt(6, Integer.parseInt(this.supplierPhone));
             pst.setString(7, this.supplierEmail);
-            pst.setInt(8, Boolean.parseBoolean(this.supplierApproval)?1:0);
+            pst.setInt(8, Boolean.parseBoolean(this.supplierApproval) ? 1 : 0);
             pst.setInt(9, Integer.parseInt(this.supplierId.replaceAll("SUP", "")));
 
             pst.executeUpdate();
@@ -173,6 +173,5 @@ public class SupplierModel {
     public void setSupplierApproval(String supplierApproval) {
         this.supplierApproval = supplierApproval;
     }
-    
 
 }
