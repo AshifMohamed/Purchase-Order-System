@@ -19,6 +19,15 @@ public class RequesitionItems {
     private double damagedQuantity;
     private String status;
 
+    public RequesitionItems(int rewuesitionNo, int itemNo,double damagedQuantity) {
+        this.rewuesitionNo = rewuesitionNo;
+        this.itemNo = itemNo;
+        this.damagedQuantity=damagedQuantity;
+    }
+
+    public RequesitionItems() {
+       
+    }
     public double getDamagedQuantity() {
         return damagedQuantity;
     }

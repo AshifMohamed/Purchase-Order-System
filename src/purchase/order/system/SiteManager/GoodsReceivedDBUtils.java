@@ -8,6 +8,7 @@ package purchase.order.system.SiteManager;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import purchase.order.system.Public.DBConn;
 
 /**
@@ -17,7 +18,7 @@ import purchase.order.system.Public.DBConn;
 public class GoodsReceivedDBUtils {
 
     SendMailTLS sendMailTLS = new SendMailTLS();
-    
+
     public boolean checkNull(String value) {
         if (value != null || value == "") {
             return true;
@@ -32,14 +33,14 @@ public class GoodsReceivedDBUtils {
         return false;
     }
 
-    public void notifySupplier(RequesitionItems requesitionItems){
-       
+    public void notifySupplier(RequesitionItems requesitionItems) {
+
         sendMailTLS.sendMailToSupplier("surendransudheesan@gmail.com", requesitionItems);
-        
+
     }
-    
+
     public boolean updateGoodReceiveDetail(RequesitionItems requesitionItems) {
-        
+
         boolean saved = false;
         try (Connection dbConnection = DBConn.myConn()) {
             dbConnection.createStatement().execute("update requisitionitems set DeliveredQuantity ='" + requesitionItems.getDeliveredQuantity() + "',Status ='" + requesitionItems.getStatus() + "' ,DamagedQuantity='" + requesitionItems.getDamagedQuantity() + "' where RequisitionNo='" + requesitionItems.getRewuesitionNo() + "' and ItemId='" + requesitionItems.getItemNo() + "'");
@@ -94,6 +95,25 @@ public class GoodsReceivedDBUtils {
         } catch (SQLException e) {
 
         }
+    }
+
+    public ArrayList<RequesitionItems> getAllDamages() {
+        ArrayList<RequesitionItems> requesitionItemses = new ArrayList<RequesitionItems>();
+        try (Connection dbConnection = DBConn.myConn()) {
+            ResultSet resultSet = dbConnection.createStatement().executeQuery("select RequisitionNo,ItemId ,DamagedQuantity from requisitionitems where DamagedQuantity >0 and Status='Pending'");
+            if (resultSet != null) {
+                while (resultSet.next()) {
+                        requesitionItemses.add(new RequesitionItems(Integer.parseInt(resultSet.getString("RequisitionNo")),Integer.parseInt(resultSet.getString("ItemId")),Integer.parseInt(resultSet.getString("DamagedQuantity"))));
+                }
+                return requesitionItemses;
+            }
+           
+
+        } catch (SQLException e) {
+
+        }
+         return requesitionItemses;
+    
     }
 
 }
