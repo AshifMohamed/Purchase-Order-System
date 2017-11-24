@@ -398,7 +398,7 @@ public class UpdateReceivedGoods extends javax.swing.JFrame {
             if (tableUpdateReceivedGoods.getValueAt(row, 2) != null && dBUtils.checkNull(tableUpdateReceivedGoods.getValueAt(row, 2).toString())) {
                 if (dBUtils.checkPostive(Double.parseDouble(tableUpdateReceivedGoods.getValueAt(row, 2).toString())) && dBUtils.checkPostive(Double.parseDouble(tableUpdateReceivedGoods.getValueAt(row, 3).toString()))) {
 
-                    if (Double.parseDouble(tableUpdateReceivedGoods.getValueAt(row, 1).toString()) > Double.parseDouble(tableUpdateReceivedGoods.getValueAt(row, 1).toString())) {
+                    if (Double.parseDouble(tableUpdateReceivedGoods.getValueAt(row, 2).toString()) > Double.parseDouble(tableUpdateReceivedGoods.getValueAt(row, 1).toString())) {
                         JOptionPane.showMessageDialog(null, "Deliverd Quantity can not be greater than Ordered Quantity");
                     } else {
                         RequesitionItems requesitionItems = new RequesitionItems();
