@@ -46,12 +46,13 @@ public class ItemModel {
 
             pst.setString(1, this.category);
             pst.setString(2, this.description);
-            pst.setString(3, this.agreedPrice);
-             pst.setString(4, this.restrictedStatus);
+            pst.setDouble(3, Double.parseDouble(this.agreedPrice));
+             pst.setInt(4, Boolean.parseBoolean(this.restrictedStatus)?1:0);
             
             pst.execute();
             return true;
         } catch (SQLException ex) {
+             ex.printStackTrace();
             return false;
         }
     
@@ -61,23 +62,23 @@ public class ItemModel {
     
     try {
             
-            String q = "update item "
-                    + "set category=?,description=?,agreedPrice=?,restrictedStatus=?"
-                    + "where itemId=?";
+            String q = "update item set category=?,description=?,agreedPrice=?,restrictedStatus=? where itemId=?";
 
             PreparedStatement pst = DBConn.myConn().prepareStatement(q);
 
             pst.setString(1, this.category);
             pst.setString(2, this.description);
-            pst.setString(3, this.agreedPrice);
-            pst.setString(4, this.restrictedStatus);
-            pst.setString(5, this.itemId);
-
-            pst.execute();
+            pst.setDouble(3, Double.parseDouble(this.agreedPrice));
+            
+            pst.setInt(4, Boolean.parseBoolean(this.restrictedStatus)?1:0);
+            pst.setInt(5, Integer.parseInt(this.itemId.replaceAll("ITM", "")));
+            System.out.println(pst.toString());
+            pst.executeUpdate();
 
             return true;
 
-        } catch (Exception e) {
+        } catch (Exception ex) {
+             ex.printStackTrace();
             return false;
         }
      

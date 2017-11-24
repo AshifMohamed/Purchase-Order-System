@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package purchase.order.system;
+package purchase.order.system.ProcurementStaff;
 
+import purchase.order.system.*;
 import java.awt.Color;
 import java.awt.Component;
 import javax.swing.JTable;

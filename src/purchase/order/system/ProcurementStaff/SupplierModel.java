@@ -61,13 +61,14 @@ public class SupplierModel {
             pst.setString(2, this.supplierAddress);
             pst.setString(3, this.supplierCity);
             pst.setString(4, this.supplierProvince);
-            pst.setString(5, this.supplierPostalCode);
-            pst.setString(6, this.supplierPhone);
+            pst.setInt(5, Integer.parseInt(this.supplierPostalCode));
+            pst.setInt(6, Integer.parseInt(this.supplierPhone));
             pst.setString(7, this.supplierEmail);
-            pst.setString(8, this.supplierApproval);
+            pst.setInt(8, Boolean.parseBoolean(this.supplierApproval)?1:0);
             pst.execute();
             return true;
         } catch (SQLException ex) {
+            ex.printStackTrace();
             return false;
         }
     }
@@ -76,9 +77,7 @@ public class SupplierModel {
 
         try {
 
-            String q = "update supplier "
-                    + "set supplierName=?,supplierAddress=?,supplierCity=?,supplierProvince=?,supplierPostalCode=?,supplierPhone=?,supplierEmail=?,supplierApproval=?  "
-                    + "where supplierId=?";
+            String q = "update supplier set supplierName=?,supplierAddress=?,supplierCity=?,supplierProvince=?,supplierPostalCode=?,supplierPhone=?,supplierEmail=?,supplierApproval=? where supplierId=?";
 
             PreparedStatement pst = DBConn.myConn().prepareStatement(q);
 
@@ -86,17 +85,18 @@ public class SupplierModel {
             pst.setString(2, this.supplierAddress);
             pst.setString(3, this.supplierCity);
             pst.setString(4, this.supplierProvince);
-            pst.setString(5, this.supplierPostalCode);
-            pst.setString(6, this.supplierPhone);
+            pst.setInt(5, Integer.parseInt(this.supplierPostalCode));
+            pst.setInt(6, Integer.parseInt(this.supplierPhone));
             pst.setString(7, this.supplierEmail);
-            pst.setString(8, this.supplierApproval);
-            pst.setString(9, this.supplierId);
+            pst.setInt(8, Boolean.parseBoolean(this.supplierApproval)?1:0);
+            pst.setInt(9, Integer.parseInt(this.supplierId.replaceAll("SUP", "")));
 
-            pst.execute();
+            pst.executeUpdate();
 
             return true;
 
-        } catch (Exception e) {
+        } catch (Exception ex) {
+            ex.printStackTrace();
             return false;
         }
 
