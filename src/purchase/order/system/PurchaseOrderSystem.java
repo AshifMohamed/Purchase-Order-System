@@ -5,6 +5,9 @@
  */
 package purchase.order.system;
 
+import javax.swing.JFrame;
+
+
 /**
  *
  * @author User
@@ -16,6 +19,8 @@ public class PurchaseOrderSystem {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        
+        
     }
     
 }
